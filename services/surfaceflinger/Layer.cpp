@@ -65,6 +65,7 @@
 
 #define DEBUG_RESIZE 0
 
+#define MAX_POSITION 32767
 namespace android {
 
 using base::StringAppendF;
@@ -927,6 +928,10 @@ bool Layer::setPosition(float x, float y, bool immediate) {
     if (mCurrentState.requested_legacy.transform.tx() == x &&
         mCurrentState.requested_legacy.transform.ty() == y)
         return false;
+    if ((y > MAX_POSITION) || (x > MAX_POSITION)) {
+        ALOGE("%s:: failed %s  x = %f y = %f",__FUNCTION__,mName.string(),x, y);
+        return false;
+    }
     mCurrentState.sequence++;
 
     // We update the requested and active position simultaneously because
